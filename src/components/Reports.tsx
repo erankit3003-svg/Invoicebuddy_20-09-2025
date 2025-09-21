@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Calendar, Users, Package, TrendingUp } from 'lucide-react';
 import jsPDF from 'jspdf';
-import 'jspdf-autotable';
+import autoTable from 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 interface SalesReport {

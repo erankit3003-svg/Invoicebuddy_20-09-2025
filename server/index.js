@@ -3,7 +3,7 @@ const cors = require('cors');
 const fs = require('fs').promises;
 const path = require('path');
 
-const __dirname = __dirname || path.resolve();
+const __dirname = path.dirname(require.main.filename);
 const app = express();
 const PORT = 3001;
 
