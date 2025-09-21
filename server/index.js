@@ -70,26 +70,36 @@ app.get('/api/customers', async (req, res) => {
 });
 
 app.post('/api/customers', async (req, res) => {
-  const customers = await readJsonFile(customersFile);
-  const newCustomer = {
-    id: Date.now().toString(),
-    ...req.body,
-    createdAt: new Date().toISOString()
-  };
-  customers.push(newCustomer);
-  await writeJsonFile(customersFile, customers);
-  res.json(newCustomer);
+  try {
+    const customers = await readJsonFile(customersFile);
+    const newCustomer = {
+      id: Date.now().toString(),
+      ...req.body,
+      createdAt: new Date().toISOString()
+    };
+    customers.push(newCustomer);
+    await writeJsonFile(customersFile, customers);
+    res.json(newCustomer);
+  } catch (error) {
+    console.error('Error creating customer:', error);
+    res.status(500).json({ error: 'Failed to create customer' });
+  }
 });
 
 app.put('/api/customers/:id', async (req, res) => {
-  const customers = await readJsonFile(customersFile);
-  const index = customers.findIndex(c => c.id === req.params.id);
-  if (index !== -1) {
-    customers[index] = { ...customers[index], ...req.body };
-    await writeJsonFile(customersFile, customers);
-    res.json(customers[index]);
-  } else {
-    res.status(404).json({ error: 'Customer not found' });
+  try {
+    const customers = await readJsonFile(customersFile);
+    const index = customers.findIndex(c => c.id === req.params.id);
+    if (index !== -1) {
+      customers[index] = { ...customers[index], ...req.body };
+      await writeJsonFile(customersFile, customers);
+      res.json(customers[index]);
+    } else {
+      res.status(404).json({ error: 'Customer not found' });
+    }
+  } catch (error) {
+    console.error('Error updating customer:', error);
+    res.status(500).json({ error: 'Failed to update customer' });
   }
 });
 
@@ -107,26 +117,37 @@ app.get('/api/products', async (req, res) => {
 });
 
 app.post('/api/products', async (req, res) => {
-  const products = await readJsonFile(productsFile);
-  const newProduct = {
-    id: Date.now().toString(),
-    ...req.body,
-    createdAt: new Date().toISOString()
-  };
-  products.push(newProduct);
-  await writeJsonFile(productsFile, products);
-  res.json(newProduct);
+  try {
+    const products = await readJsonFile(productsFile);
+    const newProduct = {
+      id: Date.now().toString(),
+      ...req.body,
+      tax: req.body.tax || 0,
+      createdAt: new Date().toISOString()
+    };
+    products.push(newProduct);
+    await writeJsonFile(productsFile, products);
+    res.json(newProduct);
+  } catch (error) {
+    console.error('Error creating product:', error);
+    res.status(500).json({ error: 'Failed to create product' });
+  }
 });
 
 app.put('/api/products/:id', async (req, res) => {
-  const products = await readJsonFile(productsFile);
-  const index = products.findIndex(p => p.id === req.params.id);
-  if (index !== -1) {
-    products[index] = { ...products[index], ...req.body };
-    await writeJsonFile(productsFile, products);
-    res.json(products[index]);
-  } else {
-    res.status(404).json({ error: 'Product not found' });
+  try {
+    const products = await readJsonFile(productsFile);
+    const index = products.findIndex(p => p.id === req.params.id);
+    if (index !== -1) {
+      products[index] = { ...products[index], ...req.body, tax: req.body.tax || 0 };
+      await writeJsonFile(productsFile, products);
+      res.json(products[index]);
+    } else {
+      res.status(404).json({ error: 'Product not found' });
+    }
+  } catch (error) {
+    console.error('Error updating product:', error);
+    res.status(500).json({ error: 'Failed to update product' });
   }
 });
 
@@ -144,26 +165,36 @@ app.get('/api/invoices', async (req, res) => {
 });
 
 app.post('/api/invoices', async (req, res) => {
-  const invoices = await readJsonFile(invoicesFile);
-  const newInvoice = {
-    id: Date.now().toString(),
-    ...req.body,
-    createdAt: new Date().toISOString()
-  };
-  invoices.push(newInvoice);
-  await writeJsonFile(invoicesFile, invoices);
-  res.json(newInvoice);
+  try {
+    const invoices = await readJsonFile(invoicesFile);
+    const newInvoice = {
+      id: Date.now().toString(),
+      ...req.body,
+      createdAt: new Date().toISOString()
+    };
+    invoices.push(newInvoice);
+    await writeJsonFile(invoicesFile, invoices);
+    res.json(newInvoice);
+  } catch (error) {
+    console.error('Error creating invoice:', error);
+    res.status(500).json({ error: 'Failed to create invoice' });
+  }
 });
 
 app.put('/api/invoices/:id', async (req, res) => {
-  const invoices = await readJsonFile(invoicesFile);
-  const index = invoices.findIndex(i => i.id === req.params.id);
-  if (index !== -1) {
-    invoices[index] = { ...invoices[index], ...req.body };
-    await writeJsonFile(invoicesFile, invoices);
-    res.json(invoices[index]);
-  } else {
-    res.status(404).json({ error: 'Invoice not found' });
+  try {
+    const invoices = await readJsonFile(invoicesFile);
+    const index = invoices.findIndex(i => i.id === req.params.id);
+    if (index !== -1) {
+      invoices[index] = { ...invoices[index], ...req.body };
+      await writeJsonFile(invoicesFile, invoices);
+      res.json(invoices[index]);
+    } else {
+      res.status(404).json({ error: 'Invoice not found' });
+    }
+  } catch (error) {
+    console.error('Error updating invoice:', error);
+    res.status(500).json({ error: 'Failed to update invoice' });
   }
 });
 

@@ -148,9 +148,14 @@ function InvoiceManagement() {
       if (response.ok) {
         await fetchData();
         resetForm();
+      } else {
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        alert('Failed to save invoice. Please try again.');
       }
     } catch (error) {
       console.error('Error saving invoice:', error);
+      alert('Failed to save invoice. Please check your connection and try again.');
     }
   };
 

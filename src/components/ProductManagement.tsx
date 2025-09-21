@@ -6,6 +6,7 @@ interface Product {
   name: string;
   description: string;
   price: number;
+  tax: number;
   category: string;
   createdAt: string;
 }
@@ -21,6 +22,7 @@ function ProductManagement() {
     name: '',
     description: '',
     price: '',
+    tax: '',
     category: ''
   });
 
@@ -57,16 +59,22 @@ function ProductManagement() {
         },
         body: JSON.stringify({
           ...formData,
-          price: parseFloat(formData.price)
+          price: parseFloat(formData.price),
+          tax: parseFloat(formData.tax) || 0
         }),
       });
 
       if (response.ok) {
         await fetchProducts();
         resetForm();
+      } else {
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        alert('Failed to save product. Please try again.');
       }
     } catch (error) {
       console.error('Error saving product:', error);
+      alert('Failed to save product. Please check your connection and try again.');
     }
   };
 
@@ -89,13 +97,14 @@ function ProductManagement() {
       name: product.name,
       description: product.description,
       price: product.price.toString(),
+      tax: product.tax.toString(),
       category: product.category
     });
     setShowForm(true);
   };
 
   const resetForm = () => {
-    setFormData({ name: '', description: '', price: '', category: '' });
+    setFormData({ name: '', description: '', price: '', tax: '', category: '' });
     setEditingProduct(null);
     setShowForm(false);
   };
@@ -178,6 +187,17 @@ function ProductManagement() {
                 />
               </div>
               <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Tax (%)</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.tax}
+                  onChange={(e) => setFormData({ ...formData, tax: e.target.value })}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                />
+              </div>
+              <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
                 <input
                   type="text"
@@ -227,6 +247,9 @@ function ProductManagement() {
                     Price
                   </th>
                   <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    Tax (%)
+                  </th>
+                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -245,6 +268,9 @@ function ProductManagement() {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
                       ${product.price.toFixed(2)}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {product.tax ? `${product.tax.toFixed(2)}%` : '0%'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       <div className="flex space-x-2">

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Download, Calendar, Users, Package, TrendingUp } from 'lucide-react';
-import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
+import { jsPDF } from 'jspdf';
+import 'jspdf-autotable';
 import * as XLSX from 'xlsx';
 
 interface SalesReport {
@@ -101,7 +101,7 @@ function Reports() {
         `$${invoice.total.toFixed(2)}`
       ]);
 
-      autoTable(doc, {
+      (doc as any).autoTable({
         head: [tableColumn],
         body: tableRows,
         startY: 75,
@@ -115,7 +115,7 @@ function Reports() {
         `$${customer.totalAmount.toFixed(2)}`
       ]);
 
-      autoTable(doc, {
+      (doc as any).autoTable({
         head: [tableColumn],
         body: tableRows,
         startY: 50,
@@ -129,7 +129,7 @@ function Reports() {
         `$${product.totalRevenue.toFixed(2)}`
       ]);
 
-      autoTable(doc, {
+      (doc as any).autoTable({
         head: [tableColumn],
         body: tableRows,
         startY: 50,

@@ -61,9 +61,14 @@ function CustomerManagement() {
       if (response.ok) {
         await fetchCustomers();
         resetForm();
+      } else {
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        alert('Failed to save customer. Please try again.');
       }
     } catch (error) {
       console.error('Error saving customer:', error);
+      alert('Failed to save customer. Please check your connection and try again.');
     }
   };
 
